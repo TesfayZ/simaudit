@@ -1,0 +1,9 @@
+{
+  "../dafd/LICENSE": "f6224e4d8c02be6b1fee3c9de336c97f3ef08279e7243b0ccefc7232540981d8",
+  "../algebraicRLtest/LICENSE": "f6224e4d8c02be6b1fee3c9de336c97f3ef08279e7243b0ccefc7232540981d8",
+  "../dafd/shipped_cartpole.py": "d71ab67ea0bb28e20f16c5606c595ea1e44199429ed59ec167b876c7ac0d4145",
+  "../dafd/benchmark_self_convergence.py": "fd430259255841dd613b58f748d064756b69a0d2ac17eef1ec66e51b0a44020a",
+  "../dafd/benchmark_quaternion_mechanism.py": "d5dac6d18c5510f5ba2bf64ddbd2004d5746c58a64113cdfa4f2a5f8dd31368a",
+  "../algebraicRLtest/audit/positive_control.py": "71291fe1ceadf84a9db0c73a5d876ca8287d3a7f5f26f2089eb66386baf120e5",
+  "../algebraicRLtest/audit/reacher_fk.py": "373429c8fea725d78e5e892bae2ff00c37df66e2ad86a397e970867daf0f788a"
+}

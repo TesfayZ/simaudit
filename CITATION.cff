@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "Please cite the two method papers below when using simaudit. Paper authorship is recorded separately from software authorship."
+title: "simaudit: scoped diagnostics for simulators"
+type: software
+version: 0.1.0a1
+date-released: 2026-11-14
+repository-code: "https://github.com/TesfayZ/simaudit"
+keywords:
+  - reinforcement learning
+  - simulator validation
+  - MuJoCo
+  - Gymnasium
+  - numerical verification
+abstract: "Scoped, reproducible diagnostics for user-supplied simulators: parameter-assignment consistency, integrator-order convergence, release comparison and observation consistency, with explicit statements of what was not assessed."
+license: MIT
+authors:
+  - family-names: Gebrekidan
+    given-names: Tesfay Zemuy
+references:
+  - type: article
+    title: "Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants"
+    authors:
+      - family-names: Gebrekidan
+        given-names: Tesfay Zemuy
+    year: 2026
+    doi: 10.5281/zenodo.24114609
+    url: "https://zenodo.org/records/24114609"
+  - type: article
+    title: "Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants"
+    authors:
+      - family-names: Gebrekidan
+        given-names: Tesfay Zemuy
+      - family-names: Gebrerufael
+        given-names: Hadush Hailu
+    year: 2026
+    doi: 10.48550/arXiv.2609.13194
+    url: "https://arxiv.org/abs/2609.13194v2"

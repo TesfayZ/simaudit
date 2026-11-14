@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simaudit"
+version = "0.1.0a1"
+description = "Scoped, reproducible diagnostics for user-supplied simulators"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+keywords = ["reinforcement-learning", "simulator", "verification", "mujoco", "gymnasium", "testing"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering",
+  "Framework :: Pytest",
+]
+license-files = ["LICENSE"]
+authors = [{name = "Tesfay Zemuy Gebrekidan"}]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+gymnasium = ["gymnasium>=1.0"]
+mujoco = ["mujoco>=3.2", "gymnasium>=1.0"]
+pytest = ["pytest>=8"]
+dev = ["pytest>=8", "build>=1", "gymnasium>=1.0"]
+
+[project.urls]
+Repository = "https://github.com/TesfayZ/simaudit"
+Issues = "https://github.com/TesfayZ/simaudit/issues"
+Documentation = "https://github.com/TesfayZ/simaudit#readme"
+
+[project.scripts]
+simaudit = "simaudit.cli:main"
+
+[project.entry-points.pytest11]
+simaudit = "simaudit.pytest_plugin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.setuptools.data-files]
+"share/simaudit" = ["CITATION.cff", "references.bib", "THIRD_PARTY.md"]
