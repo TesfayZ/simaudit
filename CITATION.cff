@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "simaudit draws on two papers listed under references: assignment consistency and order convergence follow the first (Zenodo); release comparison and observation consistency follow the second (arXiv), whose algebraic localisation method is not implemented. Please cite the papers relevant to the checks you use. Paper authorship is recorded separately from software authorship."
+message: "simaudit draws on two papers listed under references. Assignment consistency and order convergence follow Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants (Zenodo preprint). Release comparison and observation consistency follow Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants (arXiv). Their energy-fingerprint and algebraic-localisation methods are not implemented in this alpha. Please cite the papers relevant to the checks you use. Paper authorship is recorded separately from software authorship."
 title: "simaudit: scoped diagnostics for simulators"
 type: software
 version: 0.1.0a2

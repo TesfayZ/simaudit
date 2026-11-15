@@ -153,10 +153,12 @@ and selected reproductions, not a general false-alarm guarantee.
 ## Method papers
 
 simaudit draws on two papers. Assignment consistency and numerical order follow
-the first; release comparison, observation consistency and the positive-control
-validation follow the second. The second paper's algebraic screening and
-localisation method is **not** implemented in this alpha. Please cite the papers
-relevant to the checks you use.
+*Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants* (item 1, a Zenodo preprint); release comparison, observation consistency
+and the positive-control validation follow *Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants* (item 2, on arXiv). Item 1's
+energy-fingerprint classifier and item 2's algebraic screening and localisation
+method are **not** implemented in this alpha. Please cite the papers relevant to
+the checks you use. The simaudit software itself has a separate Zenodo record and
+DOI (see CITATION.cff).
 
 1. **Tesfay Zemuy Gebrekidan** (2026). *Diagnosing Model and Discretisation Errors
    in Reinforcement Learning Simulators Using Invariants*.
