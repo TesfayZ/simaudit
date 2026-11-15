@@ -8,7 +8,7 @@ from .release import load_factory
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Scoped diagnostics for any simulator through a trusted module:function adapter factory')
-    parser.add_argument('--version',action='version',version='simaudit 0.1.0a1')
+    parser.add_argument('--version',action='version',version='simaudit 0.1.0a2')
     sub = parser.add_subparsers(dest='check',required=True)
     for name in ('assignment','order','observation','release'):
         cmd = sub.add_parser(name)

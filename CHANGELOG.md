@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0a2 - 2026-11-15
+
+- Packaging metadata only: added PyPI keywords, classifiers, project URLs
+  (Changelog, Documentation) and a README alpha/feedback note.
+- Releases are now published from GitHub Actions via PyPI Trusted Publishing.
+
 ## 0.1.0a1 - 2026-11-14
 
 First public alpha.

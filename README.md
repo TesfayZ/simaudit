@@ -2,8 +2,12 @@
 
 Installable diagnostics for **your own simulator**, with explicit limits on what
 was assessed. Supply a small Python adapter; NumPy is the only core dependency.
-Gymnasium and MuJoCo are optional examples. Version **0.1.0a1** is an alpha,
+Gymnasium and MuJoCo are optional examples. Version **0.1.0a2** is an alpha,
 not a generally calibrated simulator-certification service.
+
+> **Alpha:** APIs may change. Feedback is welcome via
+> [GitHub issues](https://github.com/TesfayZ/simaudit/issues).
+> Package: [PyPI](https://pypi.org/project/simaudit/).
 
 ## Install
 
