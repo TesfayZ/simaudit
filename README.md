@@ -150,7 +150,13 @@ Run software tests with `python -m pytest`. Build with
 [requirements and acceptance criteria](docs/REQUIREMENTS.md). These are small package tests
 and selected reproductions, not a general false-alarm guarantee.
 
-## Cite the two method papers
+## Method papers
+
+simaudit draws on two papers. Assignment consistency and numerical order follow
+the first; release comparison, observation consistency and the positive-control
+validation follow the second. The second paper's algebraic screening and
+localisation method is **not** implemented in this alpha. Please cite the papers
+relevant to the checks you use.
 
 1. **Tesfay Zemuy Gebrekidan** (2026). *Diagnosing Model and Discretisation Errors
    in Reinforcement Learning Simulators Using Invariants*.
@@ -178,7 +184,7 @@ MuJoCo 4.0.0 itself was not installed or tested; no result is inferred for it.
 
 ## Roadmap
 
-Not implemented in 0.1.0a1, and not claimed anywhere in this package:
+Not implemented in this alpha, and not claimed anywhere in this package:
 
 - **0.2:** energy-refinement fingerprint (model-versus-discretisation label), a
   decision table combining checks, and a one-parameter fit, each only with its

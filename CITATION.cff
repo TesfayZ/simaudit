@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "Please cite the two method papers below when using simaudit. Paper authorship is recorded separately from software authorship."
+message: "simaudit draws on two papers listed under references: assignment consistency and order convergence follow the first (Zenodo); release comparison and observation consistency follow the second (arXiv), whose algebraic localisation method is not implemented. Please cite the papers relevant to the checks you use. Paper authorship is recorded separately from software authorship."
 title: "simaudit: scoped diagnostics for simulators"
 type: software
 version: 0.1.0a2
