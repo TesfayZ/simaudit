@@ -9,6 +9,8 @@ not a generally calibrated simulator-certification service.
 > [GitHub issues](https://github.com/TesfayZ/simaudit/issues).
 > Package: [PyPI](https://pypi.org/project/simaudit/).
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24244959.svg)](https://doi.org/10.5281/zenodo.24244959)
+
 ## Install
 
 ```bash

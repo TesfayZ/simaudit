@@ -5,6 +5,7 @@ type: software
 version: 0.1.0a2
 date-released: 2026-11-15
 repository-code: "https://github.com/TesfayZ/simaudit"
+doi: 10.5281/zenodo.24244959
 keywords:
   - reinforcement learning
   - simulator validation
