@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simaudit"
-version = "0.1.0a2"
+version = "0.2.0a1"
 description = "Scoped, reproducible diagnostics for user-supplied simulators"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -32,10 +32,11 @@ authors = [{name = "Tesfay Zemuy Gebrekidan"}]
 dependencies = ["numpy>=1.24"]
 
 [project.optional-dependencies]
+algebra = ["sympy>=1.12"]
 gymnasium = ["gymnasium>=1.0"]
-mujoco = ["mujoco>=3.2", "gymnasium>=1.0"]
+mujoco = ["mujoco>=3.2", "gymnasium[mujoco]>=1.0"]
 pytest = ["pytest>=8"]
-dev = ["pytest>=8", "build>=1", "gymnasium>=1.0"]
+dev = ["pytest>=8", "build>=1", "twine>=5", "gymnasium>=1.0"]
 
 [project.urls]
 Homepage = "https://github.com/TesfayZ/simaudit"
@@ -59,3 +60,5 @@ pythonpath = ["src"]
 
 [tool.setuptools.data-files]
 "share/simaudit" = ["CITATION.cff", "references.bib", "THIRD_PARTY.md"]
+"share/simaudit/docs" = ["docs/ADAPTERS.md", "docs/DIAGNOSTIC_WORKFLOW.md", "docs/REPORTS.md"]
+"share/simaudit/evidence" = ["evidence/workflow_cases.json", "evidence/native_controls.json"]

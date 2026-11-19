@@ -1,0 +1,202 @@
+{
+  "package_version": "0.2.0a1",
+  "seed": 20261111,
+  "runs": [
+    {
+      "versions": {
+        "python": "3.11.9",
+        "numpy": "1.24.4",
+        "gymnasium": "1.3.0",
+        "mujoco": "3.2.7"
+      },
+      "native_report_sha256": "d2351b7d9d755076f9bd4cf5ffa4462c9ecb6c18a315b8a956acf9b4d7c27c8d",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "FAIL": 23,
+            "ABSTAIN": 1
+          },
+          "median_fine_slope": 1.9591788003497863,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    },
+    {
+      "versions": {
+        "python": "3.12.14",
+        "numpy": "2.5.5",
+        "gymnasium": "1.3.0",
+        "mujoco": "3.10.0"
+      },
+      "native_report_sha256": "81f57c67a3c4080b1f851dbf345962fcb966cd337ba9a8e8d1e44326af8c365c",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "FAIL": 23,
+            "ABSTAIN": 1
+          },
+          "median_fine_slope": 1.9591788003497863,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    },
+    {
+      "versions": {
+        "python": "3.14.6",
+        "numpy": "2.5.4",
+        "gymnasium": "1.4.0",
+        "mujoco": "3.16.0"
+      },
+      "native_report_sha256": "6c9ac232ce9942fb63b75ea549e1e1a1b7dca8a126173cde7971008671371ab7",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "FAIL": 23,
+            "ABSTAIN": 1
+          },
+          "median_fine_slope": 1.9591788003497863,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    },
+    {
+      "versions": {
+        "python": "3.14.6",
+        "numpy": "2.5.4",
+        "gymnasium": "1.3.0",
+        "mujoco": "3.17.0"
+      },
+      "native_report_sha256": "33ed38a9c017d31014862b4e52f69d032067f2d62aaf9e4e19156be78fdc6cd9",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "FAIL": 23,
+            "ABSTAIN": 1
+          },
+          "median_fine_slope": 1.9591788003497863,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    },
+    {
+      "versions": {
+        "python": "3.14.6",
+        "numpy": "2.5.4",
+        "gymnasium": "1.4.0",
+        "mujoco": "4.0.0"
+      },
+      "native_report_sha256": "594c8078459f210c397acea24dcd03b7556719c31dfb5038ed50cc484ba3b417",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.9153430837452365,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    },
+    {
+      "versions": {
+        "python": "3.14.6",
+        "numpy": "2.5.4",
+        "gymnasium": "1.4.0",
+        "mujoco": "4.0.1"
+      },
+      "native_report_sha256": "fba4b15b356d8b9cd37d0b1adca2be4d7bf1b50cff6c92985a8e723abdbc7ad5",
+      "assignments": {
+        "masscart": "no_op",
+        "masspole": "stale",
+        "length": "partly_stale",
+        "gravity": "consistent"
+      },
+      "order": {
+        "heavy_top_ball": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.9153430837452365,
+          "model_sha256": "fec3fa3f782ec8fe463599dde3fd9798dea854af64a7dbe9e14b4ced6cf368ae"
+        },
+        "heavy_top_hinges": {
+          "counts": {
+            "PASS": 24
+          },
+          "median_fine_slope": 3.861537850559748,
+          "model_sha256": "86115eb6a93d00a9ba33fc2f874ab831294e3d385fecb1630daaa06072335079"
+        }
+      },
+      "reacher_max_error": 2.390712925681715e-06
+    }
+  ]
+}

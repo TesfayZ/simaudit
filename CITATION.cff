@@ -1,18 +1,16 @@
 cff-version: 1.2.0
-message: "simaudit draws on two papers listed under references. Assignment consistency and order convergence follow Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants (Zenodo preprint). Release comparison and observation consistency follow Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants (arXiv). Their energy-fingerprint and algebraic-localisation methods are not implemented in this alpha. Please cite the papers relevant to the checks you use. Paper authorship is recorded separately from software authorship."
+message: "simaudit draws on two papers listed under references. Assignment consistency and order convergence follow Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants (Zenodo preprint). Release comparison and observation consistency follow Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants (arXiv). The diagnostic workflow implements energy fingerprints, named-law screening and scoped parameter fits. Please cite the papers relevant to the checks you use. Paper authorship is recorded separately from software authorship."
 title: "simaudit: scoped diagnostics for simulators"
 type: software
-version: 0.1.0a2
-date-released: 2026-11-15
+version: 0.2.0a1
 repository-code: "https://github.com/TesfayZ/simaudit"
-doi: 10.5281/zenodo.24244959
 keywords:
   - reinforcement learning
   - simulator validation
   - MuJoCo
   - Gymnasium
   - numerical verification
-abstract: "Scoped, reproducible diagnostics for user-supplied simulators: parameter-assignment consistency, integrator-order convergence, release comparison and observation consistency, with explicit statements of what was not assessed."
+abstract: "Request-driven simulator diagnostics using replay comparisons, energy refinement, trajectory-group screening and bounded parameter attribution."
 license: MIT
 authors:
   - family-names: Gebrekidan

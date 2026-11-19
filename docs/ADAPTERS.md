@@ -18,6 +18,8 @@ capabilities and return SKIPPED instead of inferring a result.
 | `noise_floor` | Conservative absolute noise bound in the relevant distance units; not estimated automatically |
 | `smooth` | True only with justified smoothness on tested intervals |
 | `declared_order` | Positive formal integration order; required by order check |
+| `energy_fn(state)` | Pure callback returning the scalar reference energy in fixed units with a fixed zero |
+| `conservative` | Set True when the intended dynamics conserve that energy for the supplied states and actions |
 | `order_blockers` | Unsupported features/preconditions for this check |
 | `dt` | Native timestep, finite and positive |
 | `versions`, `scope`, `limitations` | Engine/build/reference identities and honest assessment boundary |
@@ -68,3 +70,36 @@ The default thresholds are documented diagnostic heuristics. Heterogeneous state
 units require a sensible distance metric/scaling; choose that and your thresholds
 before looking at outcomes. Retain unresolved probes instead of selecting only
 those that produce favourable slopes.
+
+## Energy refinement
+
+Call `check_energy(adapter, states, actions, interval=h)` once for each group of
+states you want to classify together. To reproduce a trajectory fingerprint, pass
+the successive macro-step starts from one trajectory. Each action is held fixed
+through its interval. Declare smoothness and conservation for all four refinements.
+An adapter with conditional support can raise `Unsupported` if a probe encounters
+forcing, a constraint or a reset outside its declared regime. Record the energy
+formula, units, zero, parameter values and reference version in the scope or
+version metadata. Errors that preserve the reference energy can escape detection.
+
+The JSON includes signed per-probe defect rates, their mean absolute values at
+the four resolutions and the three adjacent exponents when resolved. With
+`S = 1 + mean(abs(start_energy))`, the finest rate must exceed the largest of
+`50 * epsilon * S / h`, `atol` and `energy_noise_floor`. Both user thresholds
+are in energy per model-time unit. For independent Gaussian energy readout errors
+of standard deviation `sigma_E`, the paper uses `10 * sigma_E / (sqrt(pi) * h)`
+as its noise floor. A rate above `S / 2` triggers the paper's large-rate
+abstention. A declared state-distance noise floor or float32 precision blocks
+classification because the package requires resolved internal states.
+
+| Fingerprint | Status | Interpretation |
+|---|---|---|
+| `consistent` | PASS | All three exponents meet the paper's threshold for the declared order. |
+| `model` | FAIL | The energy-defect pattern suggests a mismatch between the dynamics and the supplied invariant. |
+| `order-k` | FAIL if k is below the declaration, otherwise ABSTAIN | Rounded mean energy exponent after the consistency rule failed. Inspect the independent state-order check. |
+| `undetermined`, `unstable` | ABSTAIN | The signal reaches a floor or exceeds the large-rate guard. |
+
+Nonfinite trajectories and energies produce BLOWUP. Known-answer tests cover a
+passive oscillator and three published Acrobot trials with freshly replayed
+Gymnasium transitions. Run `python -m pytest tests/test_energy.py` with the
+Gymnasium extra installed to include Acrobot.

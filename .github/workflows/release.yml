@@ -4,7 +4,11 @@ on:
     tags: ["v*"]
 
 jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
   build:
+    needs: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,8 +24,15 @@ jobs:
           ver = tomllib.load(open("pyproject.toml", "rb"))["project"]["version"]
           assert tag == ver, f"tag {tag} != pyproject version {ver}"
           EOF
+      - run: python validation/verify_receipt.py
       - run: python -m build
-      - run: twine check dist/*
+      - run: python -m twine check --strict dist/*
+      - name: Exercise the wheel that will be published
+        run: |
+          python -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          simaudit diagnose full --inputs simaudit.demo:inputs --strict
+          python -c "from importlib.metadata import version; import os, simaudit; assert version('simaudit') == simaudit.__version__ == os.environ['GITHUB_REF_NAME'][1:]"
       - uses: actions/upload-artifact@v4
         with:
           name: dist

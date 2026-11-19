@@ -36,6 +36,8 @@ class Adapter:
     order_blockers: list[str] = field(default_factory=list)
     assignment_metadata: dict = field(default_factory=dict)
     dt: float = 0.01
+    energy_fn: object = None
+    conservative: bool | None = None
 
     def __post_init__(self):
         if np.dtype(self.dtype).kind != 'f':
@@ -50,7 +52,7 @@ class Adapter:
     def capabilities(self):
         return {name for name, fn in (("step", self.step_fn), ("native_step", self.native_step_fn),
                 ("observation", self.observe_fn), ("reference_observation", self.reference_observe_fn),
-                ("assignment", self.assignment_factory)) if callable(fn)}
+                ("assignment", self.assignment_factory), ("energy", self.energy_fn)) if callable(fn)}
 
     def step(self, state, action, dt):
         return np.array(self.step_fn(np.array(state, copy=True), deepcopy(action), dt), copy=True)

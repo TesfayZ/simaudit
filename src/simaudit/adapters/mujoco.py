@@ -10,7 +10,7 @@ def mujoco_xml(xml):
     model = mj.MjModel.from_xml_string(xml)
     data = mj.MjData(model)
     presence = {
-        'contacts':bool(np.any(model.geom_contype) or np.any(model.geom_conaffinity)),
+        'contacts':bool(model.npair or np.any(model.geom_contype) or np.any(model.geom_conaffinity)),
         'joint_limits':bool(np.any(model.jnt_limited)), 'actuators':bool(model.nu),
         'damping':bool(np.any(model.dof_damping)), 'friction':bool(np.any(model.dof_frictionloss)),
         'fluid':bool(model.opt.viscosity or model.opt.density), 'tendons':bool(model.ntendon),
@@ -71,14 +71,19 @@ def reacher():
     model = env.model
     dt = float(env.dt)
     # Each probe begins from the same complete data snapshot, then specifies qpos/qvel.
-    snapshot = mj.MjData(model)
-    mj.mj_copyData(snapshot,model,env.data)
+    fields = mj.mjtState.mjSTATE_INTEGRATION
+    snapshot = np.empty(mj.mj_stateSize(model, fields))
+    mj.mj_getState(model, env.data, snapshot, fields)
+
+    def restore(target, s):
+        mj.mj_resetData(target.model, target.data)
+        mj.mj_setState(target.model, target.data, snapshot, fields)
+        target.set_state(s[:model.nq], s[model.nq:])
 
     def run(s,u,h,refresh=False):
         if h != dt: raise ValueError('Reacher adapter uses its native frame-skip interval')
         if s.shape != (model.nq+model.nv,): raise ValueError('Expected qpos followed by qvel')
-        mj.mj_copyData(env.data,model,snapshot)
-        env.set_state(s[:model.nq],s[model.nq:])
+        restore(env, s)
         observation,*_ = env.step(np.asarray(u,dtype=float))
         if np.any(env.data.warning.number): raise Blowup('MuJoCo warning during Reacher step')
         state = np.concatenate([env.data.qpos.copy(),env.data.qvel.copy()])
@@ -91,8 +96,7 @@ def reacher():
         other = gym.make('Reacher-v5').unwrapped
         try:
             other.reset(seed=0)
-            mj.mj_copyData(other.data,other.model,snapshot)
-            other.set_state(s[:model.nq],s[model.nq:])
+            restore(other, s)
             other.step(np.asarray(u,dtype=float))
             return np.concatenate([other.data.qpos.copy(),other.data.qvel.copy()])
         finally: other.close()

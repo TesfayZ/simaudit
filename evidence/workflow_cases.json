@@ -1,0 +1,423 @@
+{
+  "python": "3.14.6",
+  "numpy": "2.5.4",
+  "sympy": "1.14.0",
+  "gymnasium": "1.4.0",
+  "logs": [
+    {
+      "case": "Acrobot healthy",
+      "seed": 3100,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 0.0,
+      "attribution": []
+    },
+    {
+      "case": "Acrobot mass",
+      "seed": 3300,
+      "coverage": "complete",
+      "screen": "FAIL",
+      "flagged": [
+        "energy"
+      ],
+      "noise": 0.0,
+      "attribution": [
+        {
+          "law": "energy",
+          "status": "FAIL",
+          "reason": "energy is consistent with m2 = 1.3 among supplied hypotheses",
+          "parameter": "m2",
+          "estimate": 1.3000000197057324
+        }
+      ]
+    },
+    {
+      "case": "Acrobot inertia",
+      "seed": 3500,
+      "coverage": "complete",
+      "screen": "FAIL",
+      "flagged": [
+        "energy"
+      ],
+      "noise": 0.0,
+      "attribution": [
+        {
+          "law": "energy",
+          "status": "FAIL",
+          "reason": "energy is consistent with I2 = 1.5 among supplied hypotheses",
+          "parameter": "I2",
+          "estimate": 1.4999999938892878
+        }
+      ]
+    },
+    {
+      "case": "Acrobot structural",
+      "seed": 3700,
+      "coverage": "partial",
+      "screen": "FAIL",
+      "flagged": [
+        "energy"
+      ],
+      "noise": 0.0,
+      "attribution": [
+        {
+          "law": "energy",
+          "status": "ABSTAIN",
+          "reason": "Recovery lacks an isolated invariant direction",
+          "parameter": null,
+          "estimate": null
+        }
+      ]
+    },
+    {
+      "case": "Reacher healthy",
+      "seed": 3900,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 0.0,
+      "attribution": []
+    },
+    {
+      "case": "Reacher first link",
+      "seed": 4100,
+      "coverage": "complete",
+      "screen": "FAIL",
+      "flagged": [
+        "fk-x",
+        "fk-y"
+      ],
+      "noise": 0.0,
+      "attribution": [
+        {
+          "law": "fk-x",
+          "status": "FAIL",
+          "reason": "fk-x is consistent with ell1 = 0.09 among supplied hypotheses",
+          "parameter": "ell1",
+          "estimate": 0.09000000000000005
+        },
+        {
+          "law": "fk-y",
+          "status": "FAIL",
+          "reason": "fk-y is consistent with ell1 = 0.09 among supplied hypotheses",
+          "parameter": "ell1",
+          "estimate": 0.08999999999999989
+        }
+      ]
+    },
+    {
+      "case": "Reacher second link",
+      "seed": 4300,
+      "coverage": "complete",
+      "screen": "FAIL",
+      "flagged": [
+        "fk-x",
+        "fk-y"
+      ],
+      "noise": 0.0,
+      "attribution": [
+        {
+          "law": "fk-x",
+          "status": "FAIL",
+          "reason": "fk-x is consistent with ell2 = 0.13 among supplied hypotheses",
+          "parameter": "ell2",
+          "estimate": 0.13000000000000023
+        },
+        {
+          "law": "fk-y",
+          "status": "FAIL",
+          "reason": "fk-y is consistent with ell2 = 0.13 among supplied hypotheses",
+          "parameter": "ell2",
+          "estimate": 0.12999999999999992
+        }
+      ]
+    }
+  ],
+  "noisy_controls": [
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 10000,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 10200,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 10400,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 10600,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 10800,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 11000,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 11200,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 11400,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 11600,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 11800,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 12000,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 12200,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 12400,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 12600,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 12800,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 13000,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 13200,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 13400,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 13600,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    },
+    {
+      "case": "Reacher healthy noisy",
+      "seed": 13800,
+      "coverage": "complete",
+      "screen": "PASS",
+      "flagged": [],
+      "noise": 1e-05,
+      "attribution": []
+    }
+  ],
+  "mass_fits": [
+    {
+      "injected": 0.7,
+      "seed": 40100,
+      "status": "PASS",
+      "estimate": 0.6999999999361332,
+      "reason": "m2 = 0.7 in the supplied energy family",
+      "heldout_rate": 4.849628892911184e-10,
+      "acceptable_interval": [
+        0.6999937991461765,
+        0.7000062002978341
+      ]
+    },
+    {
+      "injected": 0.9,
+      "seed": 40101,
+      "status": "PASS",
+      "estimate": 0.899999999075817,
+      "reason": "m2 = 0.9 in the supplied energy family",
+      "heldout_rate": 1.696386642269232e-09,
+      "acceptable_interval": [
+        0.8999944566551574,
+        0.900005542112913
+      ]
+    },
+    {
+      "injected": 1.001,
+      "seed": 40102,
+      "status": "PASS",
+      "estimate": 1.0009999995151655,
+      "reason": "m2 = 1.001 in the supplied energy family",
+      "heldout_rate": 4.583219255505089e-10,
+      "acceptable_interval": [
+        1.0009898764626934,
+        1.0010101205295299
+      ]
+    },
+    {
+      "injected": 1.1,
+      "seed": 40103,
+      "status": "PASS",
+      "estimate": 1.0999999991386802,
+      "reason": "m2 = 1.1 in the supplied energy family",
+      "heldout_rate": 3.602742583430629e-10,
+      "acceptable_interval": [
+        1.0999908779804415,
+        1.1000091210368883
+      ]
+    },
+    {
+      "injected": 1.3,
+      "seed": 40104,
+      "status": "PASS",
+      "estimate": 1.2999999992391276,
+      "reason": "m2 = 1.3 in the supplied energy family",
+      "heldout_rate": 2.1016309248444998e-09,
+      "acceptable_interval": [
+        1.2999916263997295,
+        1.3000083714248998
+      ]
+    }
+  ],
+  "sha256": {
+    "src/simaudit/__init__.py": "0ac1c0389b8202d3511debbb567dec16144b6426b2ac825985e8ebd6fc5f65fb",
+    "src/simaudit/__main__.py": "79ee6f134c5c5193377cf9b189cbdcc3e2095e49ba9cec310114441c15a917c4",
+    "src/simaudit/adapters/__init__.py": "4852394f0cf6586c9f221bea83cd79da182da5aef1b27cbdb0483ea25afb7e18",
+    "src/simaudit/adapters/base.py": "271e3146f03130a407ddc3dd1169a583f22a0f055d796d788f74daca05642218",
+    "src/simaudit/adapters/cartpole.py": "d43cba7cc810e112601f5e9598c473431565773b77e821763b60ad42045d75cb",
+    "src/simaudit/adapters/mujoco.py": "6f1975d857728bc621ad53b08dc4c72a6d7a72ebc64044e4c76b98a4e205e709",
+    "src/simaudit/attribution.py": "d2217ea86d046ac84877fe5da4c35f1e299897872131f5088fd5f6bc6c21fd42",
+    "src/simaudit/checks.py": "a3e104016e27d8677ac30e0db0f0db4508d7701e21db92847d6eb15e34d9d4f5",
+    "src/simaudit/cli.py": "53fc3ce06fc95b958f88428769768013f965a4fe831cccd0d219880ddad6cee7",
+    "src/simaudit/demo.py": "06f1a3feac9102e5dbd45594ba615bc2366758680cbe7d3d50c0b0a9ca0da64b",
+    "src/simaudit/energy.py": "4a66169125be761909acc275704179344c2898fafc265c99d41fcbd90fb460f0",
+    "src/simaudit/fit.py": "f85991c4e6ca277cccdd423362d8eb2c7bb64b93d67438286de9c84cd7c7e300",
+    "src/simaudit/laws.py": "9372efdce1736e1060c94a5a2a38d8b5bc5a3a8c54a29a80120050a9cdadf2c0",
+    "src/simaudit/pytest_plugin.py": "9acfdd04ee1986aeaa35497e1ee73f485b6a1c789c9875673d705664418a08ab",
+    "src/simaudit/refinement.py": "9703799ec48fc4185bb055c99e736880d8022b5421228f48ae800d3ca571bec5",
+    "src/simaudit/release.py": "188f6458db0ab6003fce8d9803d4f8e8fc26a69ab92a8e4c7e173b69ae7318c3",
+    "src/simaudit/report.py": "690b22b9c1c751177df3b801ba76e0d06b71ef85b5ad13fa3eca3238c9f60eb1",
+    "src/simaudit/worker.py": "594064b7ed76c1ea891b38d13fb8fad57ebec37af8364f17eb15207d987c910a",
+    "src/simaudit/workflow.py": "4004f4236eedf29cb7789c9749f67d001d38e8bc4fb82ff3e810d0f697270e6a",
+    "validation/run_workflow_cases.py": "c6c170b8341291bb6bfee0c1ef9ba07ee40cbb470a9b5b5e8fda26c7ab32cb68",
+    "validation/known_cases.py": "6044090142b9e49adfd338a684bec4a84a5d1dd32ef629f21194efbb5fc5509e"
+  },
+  "reference_sha256": {
+    "bugs.py": "bd53c44717066a5f4c68d71e0395aae420520e3f1e6750f1370da1b050d24c14",
+    "envs.py": "62e0a6c747286ff207f2c2bac577efea2902e3c264b50d841c3f97cb0d529f0f",
+    "ideal_diff.py": "c25df59a63b42996e117a3ea8e18fb15fe317fbf44bd5c7c51d5e3b1345c4449",
+    "recover.py": "633e51912645d69b68f40fcc349c773f23695086628aeb4e67fcca751aaaaba7",
+    "discover.py": "b4d1d707cdb668a43a20a3c12dd805323e6183f6e075cd06633cf15358ba4f91",
+    "deflation.py": "74c9c2d478b4706691bf4a74a8f461c17109d4a18d24d5d09f6dca9d67f4d89c"
+  },
+  "summary": {
+    "scenarios": 7,
+    "complete": 6,
+    "expected_injection_localisations": 5,
+    "noisy_healthy_runs": 20,
+    "noisy_false_alarms": 0,
+    "noisy_abstentions": 0,
+    "attributed_laws": 6,
+    "attribution_abstentions": 1,
+    "wrong_attributions": 0
+  }
+}

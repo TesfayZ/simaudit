@@ -1,37 +1,46 @@
-# simaudit
+# SimAudit
 
-Installable diagnostics for **your own simulator**, with explicit limits on what
-was assessed. Supply a small Python adapter; NumPy is the only core dependency.
-Gymnasium and MuJoCo are optional examples. Version **0.1.0a2** is an alpha,
-not a generally calibrated simulator-certification service.
+SimAudit tests changes to simulators on states and actions you supply. It can detect a parameter write that left stale constants, measure numerical order, compare engine versions and check the observations a simulator returns. Version **0.2.0a1** also tests passive energy drift, fits a named parameter on independent starts, and screens trajectory logs for violations of specified physical laws.
 
-> **Alpha:** APIs may change. Feedback is welcome via
-> [GitHub issues](https://github.com/TesfayZ/simaudit/issues).
-> Package: [PyPI](https://pypi.org/project/simaudit/).
+The core requires Python 3.11+ and NumPy. Gymnasium, MuJoCo, SymPy and pytest are optional. APIs are in alpha. [PyPI](https://pypi.org/project/simaudit/) · [Changelog](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/CHANGELOG.md) · [Issues](https://github.com/TesfayZ/simaudit/issues)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24244959.svg)](https://doi.org/10.5281/zenodo.24244959)
+## Install and run
 
-## Install
+From this checkout, install the alpha and run the included oscillator. The demo uses separate implementations of the RK4 step and its analytical update.
 
 ```bash
-# Pre-release: pip skips alpha versions unless you ask for them.
-python -m pip install --pre simaudit
-# Optional adapters and pytest integration:
-python -m pip install --pre 'simaudit[gymnasium,mujoco,pytest]'
-# Or from a source checkout:
 python -m pip install .
+simaudit plan drift --inputs simaudit.demo:inputs
+simaudit diagnose drift --inputs simaudit.demo:inputs --strict --json drift.json
 ```
 
-Python 3.11 or newer (CI matrix 3.11-3.14; local validation on 3.14.6 and 3.12.3). Nothing downloads, runs experiments, or imports an optional
-simulator on package import. For development: `python -m pip install '.[dev]'`.
+The two checks should both print `PASS` and coverage should be `complete`. The JSON retains the refinement measurements. To exercise all eight branches, run `simaudit diagnose full --inputs simaudit.demo:inputs --strict`. The demo uses the same interpreter twice as a control for release comparison.
+
+For the published package, `python -m pip install --pre simaudit` selects the latest alpha on PyPI. The commands above require 0.2.0a1 or later. Install `simaudit[algebra]` for polynomial attribution, `simaudit[gymnasium]` for CartPole or `simaudit[mujoco]` for the native MuJoCo and Reacher adapters. From a checkout use, for example, `python -m pip install '.[algebra,mujoco]'`.
+
+## Choose a check
+
+| Question | Command after `simaudit diagnose` | Required inputs |
+|---|---|---|
+| Did a parameter write take effect? | `assignment` | Replay adapter, probes, direct assignment and fresh construction |
+| Does a new release take a different first step? | `release` | Two installed interpreters, trusted adapter factories and matched probes |
+| Is the observation stale? | `observation` | Replay, emitted observation and a reference observation map |
+| Does the integrator reach its declared order? | `order` | Smooth replay, adjustable timestep, state distance and declared order |
+| Does passive energy drift agree with the declaration? | `energy` or `drift` | Reference energy and conservative probes. `drift` also measures state order. |
+| What value of a named parameter fits these dynamics? | `fit` | Bounded affine energy family, training and held-out start groups, tolerances |
+| Which named laws changed? | `screen` | Independent healthy and candidate groups, matched conditions and polynomial laws |
+| Which parameter explains a flagged law? | `attribution` | Screen inputs, known constraints and competing bounded affine templates |
+
+Use `--inputs my_module:factory` to provide a trusted Python callable returning `WorkflowInputs`. A plan previews prerequisites without stepping the simulator. A full diagnosis runs eligible checks and reports missing inputs. Factories execute locally with your process permissions. [Workflow guide and examples](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/docs/DIAGNOSTIC_WORKFLOW.md)
 
 ## Test your own simulator
+
+For a single check, wrap the simulator step and its native reference. Each callback must restore everything needed to reproduce the requested state, action and timestep.
 
 ```python
 import numpy as np
 from simaudit import Adapter, Feature, Report, check_order
 
-# Wrap your simulator so each call restores every dependency of its next step.
 def step(state, action, dt):
     return state + dt * (state + action)
 
@@ -39,170 +48,46 @@ def native_reference(state, action, dt):
     return np.asarray([(1 + dt) * state[0] + dt * action])
 
 adapter = Adapter(
-    name="my simulator", step_fn=step, native_step_fn=native_reference,
-    features=[Feature("dynamics", "tested", "Smooth scalar ODE, no hidden state", True)],
+    name="Euler scalar ODE", step_fn=step, native_step_fn=native_reference,
+    features=[Feature("dynamics", "tested", "Smooth scalar ODE", True)],
     smooth=True, declared_order=1, dt=0.2,
 )
 result = check_order(adapter, [[0.5], [1.0], [1.5]], [0, 0, 0])
-report = Report([result])
-print(report.summary())
-report.write("audit.json")
+Report([result]).write("audit.json")
+print(result.status.value)
 ```
 
-The native reference should call the original simulator without the adapter
-transformation being tested. A user-provided reference and inventory are trusted
-inputs, not automatically verified specifications. See [the adapter guide](docs/ADAPTERS.md)
-for mutable simulators, noise, arbitrary state metrics, assignment factories,
-observation maps and capability requirements.
-
-The CLI loads a trusted local `module:function` returning an adapter. From this
-directory, run the included NumPy-only example:
+The single-check CLI accepts a trusted adapter factory and a JSON file containing matching `states` and `actions`. From this checkout run the following example. [Adapter contract and energy units](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/docs/ADAPTERS.md)
 
 ```bash
-PYTHONPATH=examples simaudit order --factory custom_simulator:factory \
-  --probes examples/probes.json --strict --json audit.json
+PYTHONPATH=examples simaudit energy --factory passive_oscillator:factory \
+  --probes examples/oscillator-probes.json --strict --json energy.json
 ```
 
-Python factories execute code with your Python process's privileges. Probe files
-contain only `states` and matching `actions`. The same interface works with your
-own importable adapter module. `python -m simaudit` is equivalent to `simaudit`.
+For release comparisons, supply `--python-a` and `--python-b` to `simaudit release`. Each worker uses its own installed simulator and records its version. Both workers must be able to import the factory. The first-step difference determines the verdict. The report also records subsequent divergence.
 
-## Four independent checks
+## Read a verdict
 
-| Check | Python API | Needs | What it reports |
-|---|---|---|---|
-| Parameter assignment | `check_assignment` | Replay, native reference, assignment factory | Baseline/direct/fresh comparison; no-op, stale, consistent or unresolved |
-| Numerical order | `check_order` | Replay, native reference, timestep, declared order, smoothness, distance | Stable refinement slopes, below-declaration order, or inability to diagnose |
-| Release/variant comparison | `compare_releases` | Factory and two supplied Python interpreters | First-step differences on identical inputs; later differences recorded separately |
-| Observation consistency | `check_observation` | Replay, native reference, observed and reference observation maps | Differences above the precision/noise floor |
+`PASS` means the check met its criterion on the supplied probes. `FAIL` records a discrepancy. `ABSTAIN` means the signal could not resolve the question, `SKIPPED` identifies missing capabilities, `PARTIAL` identifies unsupported conditions, and `BLOWUP` records a numerical failure. Inspect the scope, reference, feature inventory and individual probe results alongside the verdict. A shared error in a simulator and its reference can escape detection. Parameter attribution is conditional on the supplied hypotheses.
 
-The package doesn't implement the papers' energy-fingerprint classifier,
-algebraic localisation, parameter identification or automatic equation diagnosis.
-A numerical-order pass cannot establish that equations are correct.
+A failed check or empty report exits 1. With `--strict`, any nonpass or incomplete workflow also exits 1. Invalid configuration exits 2. The original commands, pytest fixture and report schema 1.0 remain available. Workflow JSON embeds that report under `report`. [Report format](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/docs/REPORTS.md)
 
-## Results and limitations
+## Validation and development
 
-Every result contains **PASS, FAIL, ABSTAIN, SKIPPED, PARTIAL or BLOWUP**, a reason,
-scope, limitations, mandatory feature coverage, modifications, versions and raw
-probe measurements. Limitations and untested features are printed beside results.
-
-- Float32 or a declared noise floor blocks a healthy consistency verdict in
-  checks A, B and D. A and D can still flag discrepancies above their floors.
-- Missing capabilities return `SKIPPED`; unsupported smoothness/features give
-  `PARTIAL`; unresolved or unstable slopes give `ABSTAIN`.
-- Nonfinite trajectories or detected engine resets give `BLOWUP`.
-- A failed adapter replay/native-step self-test blocks downstream diagnosis.
-- `PASS` covers the supplied probes under the declared conditions only. A wrong
-  reference, shared implementation error or unreported hidden state can escape it.
-
-By default `FAIL` exits 1; other nonpasses print a warning and exit 0. `--strict`
-exits 1 on **any** nonpass. Configuration errors exit 2. Empty reports are never
-all-clear. [Report contract](docs/REPORTS.md).
-
-## Optional adapters and releases
+On the conservative heavy-top model, the ball-joint RK4 check found below-declaration order on 23 of 24 probes with MuJoCo 3.2.7, 3.10.0, 3.16.0 and 3.17.0. One probe abstained in each run. All 24 passed on 4.0.0 and 4.0.1. The three-hinge control passed on every tested engine. On the Acrobot and Reacher workflow controls, six law-level attributions selected the injected parameter. Recovery abstained on the structural Acrobot fault. [Measurements, versions and reproduction commands](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/VALIDATION.md)
 
 ```bash
-simaudit assignment --factory simaudit.adapters.cartpole:cartpole \
-  --probes examples/cartpole-probes.json --parameter masscart --value 2 --json cartpole.json
+python -m pip install -e '.[dev,mujoco,algebra]'
+python -m pytest -q
+python -m build
+python -m twine check --strict dist/*
 ```
 
-This deliberately detects the paper's assignment discrepancy and exits 1. The
-fresh CartPole reference explicitly rebuilds dependent constants; it does not
-assert that Gymnasium promises arbitrary attribute mutation.
+The `pytest` extra exposes the `simaudit_check` fixture. Pass a check result to it inside a test. A discrepancy fails the test. Other nonpasses skip with the diagnostic reason. Use `pytest --simaudit-strict --simaudit-json results.json` for strict serial reporting.
 
-`mujoco_xml(xml)` supplies native replay for smooth autonomous rigid models and
-rejects unsupported features. `reacher()` supplies a cache-consistency comparison
-against the shipped observation map after `mj_forward`. Both live in
-`simaudit.adapters.mujoco`; imports are lazy. Custom adapters are not subject to
-these built-in models' limitations but must declare their own.
+## Method papers and licence
 
-For a release pair, create two separate environments yourself, with NumPy and
-the simulator versions you want, then supply their Python paths:
+- Tesfay Zemuy Gebrekidan, *Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants* (2026). Source for assignment consistency, energy fingerprints, state refinement and energy-based parameter fitting. [Zenodo](https://zenodo.org/records/24114609)
+- Tesfay Zemuy Gebrekidan and Hadush Hailu Gebrerufael, *Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants* (2026). Source for release and observation controls, trajectory-level law screening and quotient recovery. [arXiv](https://arxiv.org/abs/2609.13194v2)
 
-```bash
-simaudit release --factory simaudit.adapters.cartpole:cartpole \
-  --probes examples/cartpole-probes.json --python-a /path/a/bin/python \
-  --python-b /path/b/bin/python --strict --json releases.json
-```
-
-The worker runs the current package source in each interpreter. The package does
-not install or upgrade either environment. Your custom factory module must also
-be importable there. Missing versions remain untested. A changed first step means
-compatibility changed, not necessarily that either release is wrong.
-
-## pytest and verification
-
-Install the `pytest` extra to use the auto-discovered `simaudit_check` fixture:
-
-```python
-def test_simulator(simaudit_check):
-    simaudit_check(check_order(adapter, [[1.0]], [0]))
-```
-
-`FAIL` fails the test; other nonpasses skip with their original status and full
-reason. `pytest --simaudit-strict --simaudit-json results.json` fails the session
-on any nonpass and preserves the separate audit counts. Reporting is serial;
-pytest-xdist aggregation is not supported.
-
-Run software tests with `python -m pytest`. Build with
-`python -m build`. See [validation results](VALIDATION.md),
-[prospective paper-case protocol](validation/PROTOCOL.md), and
-[requirements and acceptance criteria](docs/REQUIREMENTS.md). These are small package tests
-and selected reproductions, not a general false-alarm guarantee.
-
-## Method papers
-
-simaudit draws on two papers. Assignment consistency and numerical order follow
-*Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants* (item 1, a Zenodo preprint); release comparison, observation consistency
-and the positive-control validation follow *Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants* (item 2, on arXiv). Item 1's
-energy-fingerprint classifier and item 2's algebraic screening and localisation
-method are **not** implemented in this alpha. Please cite the papers relevant to
-the checks you use. The simaudit software itself has a separate Zenodo record and
-DOI (see CITATION.cff).
-
-1. **Tesfay Zemuy Gebrekidan** (2026). *Diagnosing Model and Discretisation Errors
-   in Reinforcement Learning Simulators Using Invariants*.
-   [Zenodo](https://zenodo.org/records/24114609).
-2. **Tesfay Zemuy Gebrekidan and Hadush Hailu Gebrerufael** (2026).
-   *Diagnosing Faults in Reinforcement Learning Simulators with Canonical
-   Polynomial Invariants*. [arXiv:2609.13194v2](https://arxiv.org/abs/2609.13194v2).
-
-[CITATION.cff](CITATION.cff), [BibTeX](references.bib), and
-[reuse and licence notices](THIRD_PARTY.md) preserve the attribution. MIT licensed.
-
-## What it has found so far
-
-From [VALIDATION.md](VALIDATION.md); each row is scoped to the supplied probes.
-
-| Case | Result |
-|---|---|
-| Gymnasium CartPole `masscart`/`masspole`/`length` assignment | FAIL (no-op / stale / partly stale) vs a freshly constructed reference; `gravity` PASS |
-| MuJoCo 3.16.0 and 3.17.0, RK4 heavy top on a ball joint | FAIL: 23/24 probes below declared order 4 (1/24 ABSTAIN), median slope 1.96 |
-| MuJoCo **4.0.1**, same model and probes | PASS 24/24, median slope 3.92 |
-| Same model with three hinges (control) | PASS in every tested engine |
-| Reacher post-step observation vs refreshed map | FAIL, largest discrepancy 2.4e-6 (3.16.0, 3.17.0 and 4.0.1) |
-
-MuJoCo 4.0.0 itself was not installed or tested; no result is inferred for it.
-
-## Roadmap
-
-Not implemented in this alpha, and not claimed anywhere in this package:
-
-- **0.2:** energy-refinement fingerprint (model-versus-discretisation label), a
-  decision table combining checks, and a one-parameter fit, each only with its
-  negative-control suite passing.
-- **0.3:** algebraic invariant screening behind an optional extra.
-- Other classic-control assignment adapters, vector environments, and shipped
-  Ant/Humanoid with contacts and actuation.
-
-## Documentation
-
-| File | Purpose |
-|---|---|
-| [docs/ADAPTERS.md](docs/ADAPTERS.md) | Writing an adapter and declaring its features |
-| [docs/REPORTS.md](docs/REPORTS.md) | Report schema, statuses and JSON round trip |
-| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Acceptance criteria recorded before validation |
-| [VALIDATION.md](VALIDATION.md) | What was actually run, and the limits of those runs |
-| [validation/PROTOCOL.md](validation/PROTOCOL.md) | Paper-case protocol and scripts |
-| [evidence/README.md](evidence/README.md) | Archived result files and the hash receipt |
-| [CHANGELOG.md](CHANGELOG.md) | Release history |
+SimAudit is MIT licensed. The citation file credits the software and both method papers separately. [Citation](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/CITATION.cff) · [BibTeX](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/references.bib) · [Reuse notices](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/THIRD_PARTY.md) · [Earlier software archive](https://doi.org/10.5281/zenodo.24244959)

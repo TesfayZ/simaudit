@@ -1,34 +1,23 @@
-# Evidence register
+# Validation evidence
 
-The alpha now has freshly executed package validation. See ../VALIDATION.md and
-the prospective protocols in ../docs/REQUIREMENTS.md and ../validation/PROTOCOL.md.
+## 0.2.0a1
 
-| Artifact | Contents |
+| File | Contents |
 |---|---|
-| paper_cases_mj316.json | Gymnasium 1.4.0 / MuJoCo 3.16.0: assignment, heavy-top order, observation |
-| paper_cases_mj317.json | Gymnasium 1.3.0 / MuJoCo 3.17.0: same declared controls |
-| paper_cases_mj401.json | Gymnasium 1.4.0 / MuJoCo 4.0.1, Python 3.12.3 (run 14 Nov): same controls |
-| paper_release_controls.json | Isolated Acrobot release pair and two injected paper controls |
-| package_controls.json | Generic NumPy-only healthy, float32 and noise controls |
-| false_alarm_controls.json | Counts and Wilson intervals for the two healthy scalar controls |
-| reuse_sources.json | Hashes of inspected method/reuse sources |
-| validation_receipt.json | Final package/protocol/output hashes and execution checks |
+| [workflow_cases.json](workflow_cases.json) | Fresh Acrobot fits, clean and noisy law screens, attribution outcomes, fixture seeds, package and paper-source hashes |
+| [native_controls.json](native_controls.json) | Six measured engine combinations, per-model verdict counts and median slopes, Reacher discrepancies and raw report hashes |
+| [release_receipt.json](release_receipt.json) | SHA-256 of the reviewed checkout files and locally built wheel and source distribution |
 
-Raw states, actions, thresholds, versions, modifications and unresolved probes
-are preserved in each full report. The reports deliberately include FAIL when a
-known discrepancy is detected; this is not a failed package validation.
+The wheel and source distribution include both current measurement files. The remaining evidence is retained in the repository. The commands in [VALIDATION.md](../VALIDATION.md) rerun the measurements. From this checkout, `python validation/verify_receipt.py` checks the release files and the workflow’s recorded source hashes. Add `--dist dist` to require and check both original distribution files.
 
-Remaining design-plan rows are untested here: vector CartPole, MuJoCo 3.2.7,
-3.10.0 and 4.0.0 (4.0.1 only was tested); the full historical release matrix; InvertedDoublePendulum
-amplification; Ant/Humanoid conservative audits; the corrected development engine;
-energy fingerprint and algebraic screening/localisation. None inherit PASS from
-the parent projects. No first-fixed release is inferred from gaps in this matrix.
+## Earlier alpha
 
-The result files and receipt live in the GitHub repository and its Zenodo archive; they are
-not included in the PyPI source distribution. Run `python validation/verify_receipt.py`
-from a repository checkout (distribution hashes are skipped if `dist/` is absent).
+| File | Contents |
+|---|---|
+| paper_cases_mj316.json, paper_cases_mj317.json, paper_cases_mj401.json | Original full CartPole, heavy-top and Reacher reports |
+| paper_release_controls.json | Original isolated Acrobot release comparison and two injected controls |
+| package_controls.json, false_alarm_controls.json | Scalar, precision and noise controls and the Wilson intervals |
+| software_tests.xml, validation_receipt.json | Historical software test output and 0.1.0a1 source, distribution and evidence hashes |
+| reuse_sources.json | Hashes of inspected source and licence files from the two method repositories |
 
-The archived result files are unedited records of the original runs, so they contain
-the original machine's interpreter paths. `reuse_sources.json` keys are paths relative
-to the author's workspace, where the `dafd` and `algebraicRLtest` repositories (see
-../THIRD_PARTY.md) were checked out beside this one when their source hashes were taken.
+Historical reports retain the original interpreter paths. The raw measurements contain known-fault verdicts and abstentions. [Historical validation](https://github.com/TesfayZ/simaudit/blob/v0.1.0a2/VALIDATION.md)

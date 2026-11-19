@@ -183,6 +183,34 @@ def test_float64_cast_does_not_hide_float32_observation_limit():
     assert check_observation(a,[[1.]],[0]).status==Status.ABSTAIN
 
 
+def test_observation_preserves_shared_buffer_and_action():
+    a = analytic()
+    buffer = np.zeros(1)
+    action = np.array([2.])
+    def observed(state, u, dt):
+        buffer[:] = u
+        u[:] = 0
+        return buffer
+    def reference(state, u, dt):
+        buffer[:] = u + 1
+        return buffer
+    a.observe_fn, a.reference_observe_fn = observed, reference
+    r = check_observation(a, [[1.]], [action])
+    assert r.status == Status.FAIL
+    assert r.evidence['probes'][0]['error'] == 1
+    assert action.tolist() == [2.]
+
+
+def test_empty_order_inventory_and_nonfinite_continuation():
+    a = analytic()
+    a.features.clear()
+    assert check_order(a, [[1.]], [0]).status == Status.PARTIAL
+    a = analytic()
+    a.step_fn = a.native_step_fn = lambda s, u, h: s + 1 if s[0] == 1 else s * np.nan
+    a.distance_fn = lambda x, y: 0
+    assert check_order(a, [[1.]], [0]).status == Status.BLOWUP
+
+
 def test_release_workers_do_not_inherit_callers_site_packages(monkeypatch, tmp_path):
     """Regression: PYTHONPATH must expose only the simaudit package to workers."""
     import subprocess, sys

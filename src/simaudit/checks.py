@@ -1,11 +1,15 @@
 """Independent scoped checks. Method attribution: see CITATION.cff and THIRD_PARTY.md."""
 from dataclasses import asdict
-import math
+from copy import deepcopy
 import numpy as np
 from .report import Feature, Modification, Result, Status
 from .adapters import Blowup, Unsupported
+from .refinement import Refinement, refinement_exponent
 
 LIMITS = {
+    'energy': ['Finite-step fingerprint of the supplied reference energy on the pooled probes.',
+               'Energy-preserving faults can escape detection. Cancellation or a dominant discretisation error can mask a model mismatch.',
+               'The rate guards depend on the energy units, offset and model-time unit. Energy exponents alone do not establish trajectory order.'],
     'assignment': ['Only explicitly supplied parameters and probes are assessed.',
                    'The fresh factory defines the parameter contract; direct mutation may not be a supported simulator API.'],
     'order': ['Convergence does not establish correct equations or accurate trajectories.',
@@ -59,6 +63,8 @@ def self_test(a, states, actions, dts, atol=1e-12):
             y = a.step(x, action, dt)
             replay = a.step(state, action, dt)
             native_y = a.native_step(native, action, dt)
+            if not all(np.all(np.isfinite(v)) for v in (y, replay, native_y)):
+                raise Blowup('Nonfinite output during adapter continuation or replay')
             continuation_floor, _ = precision(a, [y, native_y], atol)
             if a.distance(x, replay) > replay_floor or a.distance(y, native_y) > continuation_floor:
                 return False, 'state restoration or continuation equivalence failed'
@@ -97,11 +103,13 @@ def check_assignment(a, parameter, value, states, actions, *, atol=1e-12):
         assigned, fresh = a.assignment_factory(parameter, value)
     except Unsupported as exc:
         return result(a, 'assignment', Status.SKIPPED, str(exc))
-    for candidate in (assigned, fresh):
+    for configuration, candidate in (('assigned', assigned), ('fresh', fresh)):
         blocked = guard(candidate, 'assignment', states, actions, [candidate.dt])
-        if blocked: return blocked
+        if blocked:
+            blocked.evidence['configuration'] = configuration
+            return blocked
     if not assigned.modifications or not fresh.modifications:
-        return result(a, 'assignment', Status.FAIL, 'Assignment factory omitted modification records', fault='adapter')
+        return result(a, 'assignment', Status.FAIL, 'Assignment factory omitted modification records', {'configuration':'assignment factory'}, fault='adapter')
     rows = []
     try:
         for s, u in zip(states, actions):
@@ -131,10 +139,15 @@ def check_assignment(a, parameter, value, states, actions, *, atol=1e-12):
 
 
 def check_order(a, states, actions, *, interval=None, atol=1e-12, order_tolerance=0.5, slope_tolerance=0.5):
+    return _check_order(a, states, actions, Refinement(), interval=interval, atol=atol,
+                        order_tolerance=order_tolerance, slope_tolerance=slope_tolerance)
+
+
+def _check_order(a, states, actions, refinement, *, interval=None, atol=1e-12, order_tolerance=0.5, slope_tolerance=0.5):
     states, actions = probes(states, actions)
     atol, order_tolerance, slope_tolerance = map(tolerance, (atol, order_tolerance, slope_tolerance))
     h = a.dt if interval is None else float(interval)
-    if not np.isfinite(h) or h <= 0: raise ValueError('Interval must be positive and finite')
+    if not np.isfinite(h) or h / 8 <= 0: raise ValueError('Interval and substeps must be positive and finite')
     if a.declared_order is None:
         return result(a, 'order', Status.SKIPPED, 'Missing declared_order')
     if not np.isfinite(a.declared_order) or a.declared_order <= 0:
@@ -142,26 +155,22 @@ def check_order(a, states, actions, *, interval=None, atol=1e-12, order_toleranc
     modifications = [Modification('timestep', a.dt, h/m, f'Fixed-interval refinement: {m} substeps')
                      for m in (1,2,4,8) if h/m != a.dt]
     unknown = [f.name for f in a.features if f.status=='unsupported' and f.present is not False]
-    if a.smooth is not True or a.order_blockers or unknown:
-        return result(a, 'order', Status.PARTIAL, 'Smoothness not established or unsupported features: ' +
-                      ', '.join(a.order_blockers + unknown or ['smooth']), modifications=modifications)
+    if not a.features or a.smooth is not True or a.order_blockers or unknown:
+        return result(a, 'order', Status.PARTIAL, 'Requires an inventoried smooth regime: ' +
+                      ', '.join(a.order_blockers + unknown or ['missing inventory or smoothness']), modifications=modifications)
     blocked = guard(a, 'order', states, actions, [h/m for m in (1,2,4,8)])
     if blocked:
         blocked.modifications.extend(modifications)
         return blocked
     rows = []
     try:
-        for s, u in zip(states, actions):
-            endpoints = []
-            for m in (1,2,4,8):
-                x = s.copy()
-                for _ in range(m):
-                    x = a.step(x, u, h/m)
-                    if not np.all(np.isfinite(x)): raise Blowup('Nonfinite refinement trajectory')
-                endpoints.append(x)
+        for index, (s, u) in enumerate(zip(states, actions)):
+            measured = [refinement.get(index, a, s, u, h/m, m) for m in (1,2,4,8)]
+            endpoints = [x for x, _ in measured]
             floor, eps = precision(a, endpoints, atol)
+            eps = max(eps, *(step_eps for _, step_eps in measured))
             d = [a.distance(x,y) for x,y in zip(endpoints, endpoints[1:])]
-            p = [math.log2(d[i]/d[i+1]) for i in (0,1)] if min(d)>floor else [None,None]
+            p = [refinement_exponent(d[i], d[i+1]) for i in (0,1)] if min(d)>floor else [None,None]
             if eps > 1e-10 or a.noise_floor or p[0] is None:
                 label = 'ABSTAIN'
             elif abs(p[0]-p[1]) > slope_tolerance:
@@ -196,8 +205,8 @@ def check_observation(a, states, actions, *, atol=1e-12):
     rows = []
     try:
         for s,u in zip(states,actions):
-            observed = np.asarray(a.observe_fn(s.copy(),u,a.dt))
-            reference = np.asarray(a.reference_observe_fn(s.copy(),u,a.dt))
+            observed = np.array(a.observe_fn(s.copy(), deepcopy(u), a.dt), copy=True)
+            reference = np.asarray(a.reference_observe_fn(s.copy(), deepcopy(u), a.dt))
             if observed.shape != reference.shape: raise ValueError('Observation shapes differ')
             if not np.all(np.isfinite(observed)) or not np.all(np.isfinite(reference)):
                 raise Blowup('Nonfinite observation')

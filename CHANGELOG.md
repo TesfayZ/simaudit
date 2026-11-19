@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0a1
+
+Changes since the published 0.1.0a2 alpha.
+
+- Added `energy` and the `plan` and `diagnose` CLI commands. The new workflow record includes branch coverage, missing inputs and the original schema 1.0 report.
+- Added passive energy fingerprints, combined energy and state refinement, and bounded affine parameter fitting with equal weight per independent start and a held-out residual check.
+- Added named-law screening with the paper’s raw residual floor, numerical tie tolerance and strict Bonferroni decision. Optional SymPy attribution uses graded reverse lexicographic normal forms and competing single-parameter templates.
+- Fixed observation comparisons when callbacks share output buffers or mutate actions. Energy exponents preserve exact power-of-two ratios at the classification boundary. Order checks require a feature inventory and workflows identify unresolved probes even when another probe detects a fault.
+- Fixed the Reacher optional installation and replay on MuJoCo versions without `mj_copyData`. Explicit contact pairs now block the smooth autonomous XML adapter.
+- Retained the four original checks, public report types and pytest integration. The release workflow now tests the package and exercises the publication wheel before upload.
+
 ## 0.1.0a2 - 2026-11-15
 
 - Packaging metadata only: added PyPI keywords, classifiers, project URLs

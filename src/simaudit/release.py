@@ -83,7 +83,7 @@ def _run_workers(adapter, payload, encoded, factory, factory_b, python_a, python
         workers.append(worker)
         if worker.status != Status.PASS:
             return result(adapter,'release',worker.status,'Worker did not pass: '+worker.reason,
-                          {'worker':json.loads(Report([worker]).dumps())})
+                          {'worker':json.loads(Report([worker]).dumps())}, worker.fault_class)
     left,right = workers
     adapter.versions = {**{f'a:{k}':v for k,v in left.versions.items()},**{f'b:{k}':v for k,v in right.versions.items()}}
     a,b = [np.asarray(w.evidence['trajectories']) for w in workers]

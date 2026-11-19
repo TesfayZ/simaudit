@@ -20,3 +20,14 @@ def test_quaternion_sign_metric():
     contype="0" conaffinity="0"/></body></worldbody></mujoco>'''
     a=mujoco_xml(xml)
     assert a.distance(np.array([1.,0,0,0,0,0,0]),np.array([-1.,0,0,0,0,0,0]))<1e-12
+
+
+def test_reacher_replay_and_refreshed_observation():
+    pytest.importorskip('gymnasium')
+    from simaudit import check_observation
+    from simaudit.adapters.mujoco import reacher
+
+    adapter = reacher()
+    r = check_observation(adapter, [[0.1, -0.1, 0.15, 0., 0.5, -0.2, 0., 0.]], [[0.1, -0.2]])
+    assert r.evidence['self_test'] == 'passed'
+    assert r.evidence['probes'][0]['error'] >= 0
