@@ -87,7 +87,9 @@ The `pytest` extra exposes the `simaudit_check` fixture. Pass a check result to 
 
 ## Method papers and licence
 
-- Tesfay Zemuy Gebrekidan, *Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants* (2026). Source for assignment consistency, energy fingerprints, state refinement and energy-based parameter fitting. [Zenodo](https://zenodo.org/records/24114609)
-- Tesfay Zemuy Gebrekidan and Hadush Hailu Gebrerufael, *Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants* (2026). Source for release and observation controls, trajectory-level law screening and quotient recovery. [arXiv](https://arxiv.org/abs/2609.13194v2)
+SimAudit builds on two papers about diagnosing errors in reinforcement learning simulators.
 
-SimAudit is MIT licensed. The citation file credits the software and both method papers separately. [Citation](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/CITATION.cff) · [BibTeX](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/references.bib) · [Reuse notices](https://github.com/TesfayZ/simaudit/blob/v0.2.0a1/THIRD_PARTY.md) · [Earlier software archive](https://doi.org/10.5281/zenodo.24244959)
+- Gebrekidan, T. Z. (2026). [Diagnosing Model and Discretisation Errors in Reinforcement Learning Simulators Using Invariants](https://doi.org/10.5281/zenodo.24114609).
+- Gebrekidan, T. Z., & Gebrerufael, H. H. (2026). [Diagnosing Faults in Reinforcement Learning Simulators with Canonical Polynomial Invariants](https://arxiv.org/abs/2609.13194v2).
+
+SimAudit is MIT licensed. [Reuse notices](https://github.com/TesfayZ/simaudit/blob/main/THIRD_PARTY.md) · [Software archive](https://doi.org/10.5281/zenodo.24244959)

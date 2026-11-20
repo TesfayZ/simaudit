@@ -1,10 +1,10 @@
 # Method provenance and reuse
 
-The package uses two source papers, with their full authorship preserved:
+SimAudit builds on the following papers.
 
 1. **Tesfay Zemuy Gebrekidan.** *Diagnosing Model and Discretisation Errors in
    Reinforcement Learning Simulators Using Invariants* (2026).
-   [Zenodo record](https://zenodo.org/records/24114609).
+   [Paper](https://doi.org/10.5281/zenodo.24114609).
    Source repository: [`dafd`](https://github.com/TesfayZ/dafd). Assignment consistency, refinement diagnostics,
    native integrator controls and precision/coverage limitations inform this package.
    The energy check implements the classifier in Definition 1 and
@@ -14,7 +14,7 @@ The package uses two source papers, with their full authorship preserved:
    `Results/shipped_acrobot_fingerprint_trials.csv` (dafd revision `1e69c46`).
 2. **Tesfay Zemuy Gebrekidan and Hadush Hailu Gebrerufael.** *Diagnosing Faults in
    Reinforcement Learning Simulators with Canonical Polynomial Invariants* (2026).
-   [arXiv:2609.13194v2](https://arxiv.org/abs/2609.13194v2).
+   [Paper](https://arxiv.org/abs/2609.13194v2).
    Source repository: [`algebraicRLtest`](https://github.com/TesfayZ/algebraicRLtest). Paired release comparisons, positive
    controls and observation consistency inform this package. The workflow adapts its
    trajectory-unit permutation screen and quotient-SVD/template attribution.
